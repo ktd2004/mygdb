@@ -393,7 +393,9 @@ void Breakpoint::OnDeleteBreakpoint(wxCommandEvent& WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
 
-	int num = atoi((char*)GetItemText(item, 0).c_str());
+   	wxString _num = GetItemText(item, 0);
+	long num;
+	_num.ToLong(&num, 10);
 
 	wxString cmd = wxString::Format(wxT("delete %d"), num);
 	DEBUGGER->Eval(cmd);
@@ -405,7 +407,9 @@ void Breakpoint::OnEnableBreakpoint(wxCommandEvent& WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
 
-	int num = atoi((char*)GetItemText(item, 0).c_str());
+   	wxString _num = GetItemText(item, 0);
+	long num;
+	_num.ToLong(&num, 10);
 
 	wxString cmd = wxString::Format(wxT("enable %d"), num);
 	DEBUGGER->Eval(cmd);
@@ -417,7 +421,9 @@ void Breakpoint::OnDisableBreakpoint(wxCommandEvent& WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
 
-	int num = atoi((char*)GetItemText(item, 0).c_str());
+   	wxString _num = GetItemText(item, 0);
+	long num;
+	_num.ToLong(&num, 10);
 
 	wxString cmd = wxString::Format(wxT("disable %d"), num);
 	DEBUGGER->Eval(cmd);

@@ -286,7 +286,6 @@ void StyledTextCtrl::OnShowValue(wxStyledTextEvent& event)
 
 	int pos = event.GetPosition();
 
-	// 디버깅 중이면 변수의 값 표시
 	if ( m_started )
 	{
 		if (CallTipActive()) return;

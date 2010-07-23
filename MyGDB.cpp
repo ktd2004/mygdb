@@ -514,7 +514,7 @@ void MyGdbFrame::AddBreakpoint(wxString path, int line)
 	}
 }
 
-void MyGdbFrame::RemoveBreakpoint(wxString path, int line)
+void MyGdbFrame::RemoveBreakpoint(wxString path, int removeLine)
 {
 	if ( m_started )
 	{
@@ -535,11 +535,15 @@ void MyGdbFrame::RemoveBreakpoint(wxString path, int line)
 				_address = tkz2.GetNextToken();
 				_source = tkz2.GetNextToken();
 				_line = tkz2.GetNextToken();
+   	
+				long line;
+				_line.ToLong(&line, 10);
+				long num;
+				_num.ToLong(&num, 10);
 
-				if ( path == _source && line == atoi((char*)_line.c_str()) )
+				if ( path == _source && removeLine == line)
 				{
-					wxString cmd = wxString::Format(wxT("delete %d"), 
-						atoi((char*)_num.c_str()));
+					wxString cmd = wxString::Format(wxT("delete %d"), num);
 					m_debugger->Eval(cmd);
 				}
 			}

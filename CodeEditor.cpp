@@ -101,7 +101,9 @@ void CodeEditor::ShowBreakpoint ()
 
 			if ( _source == m_relativePath )
 			{
-				int line = atoi((char*)_line.c_str())-1;
+				long line;
+				_line.ToLong(&line, 10);
+				line=line-1;
 				m_stc->MarkerAdd(line, BREAKPOINT_MARKER);
 			}
 		}

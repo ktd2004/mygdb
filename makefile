@@ -15,10 +15,10 @@ endif
 
 CFLAGS = -W -Wno-write-strings -I.
 
-ifeq (ON,$(DEBUG))
-	CFLAGS += -g
-else
+ifeq (OFF,$(DEBUG))
 	CFLAGS += -O2
+else
+	CFLAGS += -g
 endif
     
 CFLAGS += `$(WXCONFIG) --cflags`
