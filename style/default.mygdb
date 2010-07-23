@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MYTCL>
+  <VERSION value="1.0"/>
+  <NAME value="Default"/>
+  <EDITOR>
+	  <SELECTION bg="#CCCCCC"/>
+	  <CARETLINE bg="#F5F5F5"/>
+	  <EDGE fg="#C0C0C0"/>
+	  <LINENUMBERMARGIN fg="#555555" bg="#E9E8DF" face="Courier New" size="10"/>
+	  <MARKERMARGIN fg="#0C1521" bg="#E9E8DF"/>
+	  <FOLDMARGIN fg="#FFFFFF" bg="#E9E8DF"/>
+	  <DEFAULT fg="#000000" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <IDENTIFIER fg="#000000" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <WORD fg="#7F0055" bg="#FFFFFF" face="Courier New" bold="true" size="10"/>
+	  <COMMENT fg="#3F7F5F" bg="#F0FFF0" face="Courier New" italic="false" size="10"/>
+	  <STRING fg="#2A00FF" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <CHARACTER fg="#2A00FF" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <PREPROCESSOR fg="#7F0055" bg="#FFFFFF" face="Courier New" bold="true" size="10"/>
+	  <NUMBER fg="#000000" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <OPERATOR fg="#781F87" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <RULER fg="#555555" bg="#E9E8DF" size="8" face="MS Mincho"/>
+  </EDITOR>
+  <CONSOLE>
+	  <SELECTION fg="#FFFFFF" bg="#506D99"/>
+	  <CARETLINE bg="#E8F2FE" fg="#871F78"/>
+	  <EDGE fg="#C0C0C0"/>
+	  <LINENUMBERMARGIN fg="#C0C0C0" bg="#E9E8DF" face="Courier New" size="10"/>
+	  <DEFAULT fg="#000000" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <NORMAL fg="#0000FF" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <ERROR fg="#FF0000" bg="#FFFFFF" face="Courier New" size="10"/>
+	  <PROMPT fg="#8F4433" bg="#FFFFFF" face="Courier New" size="10" bold="true"/>
+	  <INPUT fg="#008800" bg="#FFFFFF" face="Courier New" size="10"/>
+  </CONSOLE>
+</MYTCL>
