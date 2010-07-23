@@ -73,8 +73,8 @@ public:
 	void ClearAllDebugPointer();
 	CodeEditor *OpenSource(wxString path);
 
-	void AddBreakpoint(wxString path, int line);
-	void RemoveBreakpoint(wxString path, int line);
+	void AddBreakpoint(wxString path, int addLine);
+	void RemoveBreakpoint(wxString path, int removeLine);
 	
 private:
 	void OnSize(wxSizeEvent& event);

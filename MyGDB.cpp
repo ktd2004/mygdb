@@ -504,13 +504,13 @@ void MyGdbFrame::OnGo(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void MyGdbFrame::AddBreakpoint(wxString path, int line)
+void MyGdbFrame::AddBreakpoint(wxString path, int addLine)
 {
 	if ( m_started )
 	{
 		m_console->Puts(wxT("\n"));
 		m_debugger->Write(wxString::Format(wxT("break \"%s\":%d"), 
-					path.c_str(), line));
+					path.c_str(), addLine));
 	}
 }
 
