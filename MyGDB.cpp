@@ -2,7 +2,8 @@
 
 #include <MyGDB.h>
 #include "xpm/mygdb.xpm"
-#include "about_bitmap.h"
+//#include "about_bitmap.h"
+#include "xpm/about.xpm"
 
 wxString exePath; 	// MyGDB program path
 
@@ -131,32 +132,51 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	// ----------------------
 	menu = new wxMenu;
 	
-	item = new wxMenuItem(menu, ID_START, wxString("Start\tCtrl+F5", wxConvUTF8));
+	item = new wxMenuItem(menu, ID_START, 
+			wxT("Start\tF5"));
 	item->SetBitmap(GET_BITMAP("start"));
 	menu->Append(item);
-	item = new wxMenuItem(menu, ID_ABORT, wxString("Abort\tCtrl+F6", wxConvUTF8));
+	item = new wxMenuItem(menu, ID_ABORT, 
+			wxT("Abort\tShift+F5"));
 	item->SetBitmap(GET_BITMAP("abort"));
 	menu->Append(item);
+	// ------------
 	menu->AppendSeparator();
-	item = new wxMenuItem(menu, ID_GO, wxT("Continue\tF8"));
-	item->SetBitmap(GET_BITMAP("go"));
-	item = new wxMenuItem(menu, ID_STEP_INTO, wxT("Step Into\tF11"));
-	item->SetBitmap(GET_BITMAP("step_into"));
-	menu->Append(item);
-	item = new wxMenuItem(menu, ID_STEP_OUT, wxT("Step Out\tShift+F11"));
-	item->SetBitmap(GET_BITMAP("step_out"));
-	menu->Append(item);
-	item = new wxMenuItem(menu, ID_STEP_OVER, wxT("Step Over\tF10"));
+	// ------------
+	// Executes the next line of code but does not 
+	// step into any function calls
+	item = new wxMenuItem(menu, ID_STEP_OVER, 
+			wxT("Step Over\tF10"));
 	item->SetBitmap(GET_BITMAP("step_over"));
 	menu->Append(item);
-	item = new wxMenuItem(menu, ID_RUN_TO_CURSOR, wxT("Run To Cursor\tCtrl+F10"));
+	// Executes code one statement at a time, 
+	// tracing execution into function calls
+	item = new wxMenuItem(menu, ID_STEP_INTO, 
+			wxT("Step Into\tF11"));
+	item->SetBitmap(GET_BITMAP("step_into"));
+	menu->Append(item);
+	// Executes the remaining lines of a function in 
+	// which the current execution point lines
+	item = new wxMenuItem(menu, ID_STEP_OUT, 
+			wxT("Step Out\tShift+F11"));
+	item->SetBitmap(GET_BITMAP("step_out"));
+	menu->Append(item);
+	item = new wxMenuItem(menu, ID_RUN_TO_CURSOR, 
+			wxT("Run To Cursor\tF7"));
 	item->SetBitmap(GET_BITMAP("run_to_cursor"));
 	menu->Append(item);
+	item = new wxMenuItem(menu, ID_GO, 
+			wxT("Continue\tF8"));
+	item->SetBitmap(GET_BITMAP("go"));
+	menu->Append(item);
+	// ------------
 	menu->AppendSeparator();
-	item = new wxMenuItem(menu, ID_STOP, wxT("Stop\tCtrl+F9"));
+	// ------------
+	item = new wxMenuItem(menu, ID_STOP, 
+			wxT("Stop\tCtrl+F9"));
 	item->SetBitmap(GET_BITMAP("stop"));
 	menu->Append(item);
-	m_menuBar->Append(menu, wxT("&Debugger"));
+	m_menuBar->Append(menu, wxT("&Debug"));
 
 	// ------------------------
 	menu = new wxMenu;
@@ -178,7 +198,7 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	
 	// ------------------------
 	menu = new wxMenu;
-	item = new wxMenuItem(menu, wxID_ABOUT, wxT("About"));
+	item = new wxMenuItem(menu, wxID_ABOUT, wxT("About\tF12"));
 	menu->Append(item);
 	m_menuBar->Append(menu, wxT("&Help"));
 	
@@ -233,23 +253,25 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
     m_debugToolBar->SetToolBitmapSize(wxSize(16,16));
 
     m_debugToolBar->AddTool(ID_START, 
-			wxEmptyString, GET_BITMAP(wxT("start")), wxT("Debug (Ctrl+F5)"));
+			wxEmptyString, GET_BITMAP(wxT("start")), 
+			wxT("Debug (F5)"));
     m_debugToolBar->AddSeparator();
     m_debugToolBar->AddTool(ID_ABORT, 
-			wxEmptyString, GET_BITMAP(wxT("abort")), wxT("Abort (Ctrl+F6)"));
+			wxEmptyString, GET_BITMAP(wxT("abort")), 
+			wxT("Abort (Shift+F5)"));
 
     m_debugToolBar->AddSeparator();
 
-    m_debugToolBar->AddTool(ID_GO, wxEmptyString, 
-			GET_BITMAP(wxT("go")), wxT("Continue (F8)"));
+	m_debugToolBar->AddTool(ID_STEP_OVER, wxEmptyString, 
+			GET_BITMAP(wxT("step_over")), wxT("Step Over (F10)"));
     m_debugToolBar->AddTool(ID_STEP_INTO, wxEmptyString, 
 			GET_BITMAP(wxT("step_into")), wxT("Step Into (F11)"));
 	m_debugToolBar->AddTool(ID_STEP_OUT, wxEmptyString, 
 			GET_BITMAP(wxT("step_out")), wxT("Step Out (Shift+F11)"));
-	m_debugToolBar->AddTool(ID_STEP_OVER, wxEmptyString, 
-			GET_BITMAP(wxT("step_over")), wxT("Step Over (F10)"));
 	m_debugToolBar->AddTool(ID_RUN_TO_CURSOR, wxEmptyString, 
-			GET_BITMAP(wxT("run_to_cursor")), wxT("Run To Cursor (Ctrl+F10)"));
+			GET_BITMAP(wxT("run_to_cursor")), wxT("Run To Cursor (F7)"));
+    m_debugToolBar->AddTool(ID_GO, wxEmptyString, 
+			GET_BITMAP(wxT("go")), wxT("Continue (F8)"));
     
 	m_debugToolBar->AddSeparator();
 	
@@ -295,7 +317,7 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 		Name(wxT("watch")).
 		Caption(wxT("Watch")).
 		Left().Layer(1).CloseButton(true).MaximizeButton(false));
-	m_mgr.GetPane(wxT("watch")).Show(false);
+	//m_mgr.GetPane(wxT("watch")).Show(false);
 	
 	// ----------- register
     m_register = new Register(
@@ -630,7 +652,7 @@ void MyGdbFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	About *dlg = new About(this, this);
 	//dlg->SetAppName(wxTheApp->GetAppName());
 	dlg->SetAppName(wxT("MyGDB"));
-	dlg->SetVersion(wxT("dev-20100723"));
+	dlg->SetVersion(wxT("dev-20100725"));
 
 	wxString copy = wxT("MyGDB is distributed under the GNU GPL-v3\n\n");
 	copy = copy + wxT("inhak.min@gmail.com\n");
@@ -640,8 +662,9 @@ void MyGdbFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	dlg->SetCustomBuildInfo(wxString::Format(wxT("%s. %s"),
 		About::GetBuildInfo(About::wxBUILDINFO_LONG).GetData(),
 		wxT("\nPowered by GDB and wxWidgets")));
-	dlg->SetHeaderBitmap(wxGetBitmapFromMemory(
-				about_bitmap, sizeof(about_bitmap)));
+	dlg->SetHeaderBitmap(wxBitmap(about_xpm));
+	//dlg->SetHeaderBitmap(wxGetBitmapFromMemory(
+	//			about_bitmap, sizeof(about_bitmap)));
 	dlg->ApplyInfo();
 	dlg->ShowModal();
 	dlg->Destroy();

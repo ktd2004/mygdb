@@ -20,8 +20,8 @@
 BEGIN_EVENT_TABLE(StyledTextCtrl, wxStyledTextCtrl)
     EVT_STC_MARGINCLICK(wxID_ANY, StyledTextCtrl::OnMarginClicked)
 	EVT_STC_UPDATEUI (wxID_ANY, StyledTextCtrl::OnUpdateUI)
-	EVT_STC_DWELLSTART (wxID_ANY, StyledTextCtrl::OnShowValue)
-	EVT_STC_DWELLEND (wxID_ANY, StyledTextCtrl::OnHideValue)
+	//EVT_STC_DWELLSTART (wxID_ANY, StyledTextCtrl::OnShowValue)
+	//EVT_STC_DWELLEND (wxID_ANY, StyledTextCtrl::OnHideValue)
 	EVT_LEAVE_WINDOW(StyledTextCtrl::OnLeave)
 	EVT_ENTER_WINDOW(StyledTextCtrl::OnEnter)
 END_EVENT_TABLE()
@@ -136,6 +136,13 @@ StyledTextCtrl::StyledTextCtrl(CodeEditor* parent,
 	SetStyles();
 	SetProperties();
 
+	Connect( this->GetId(), -1, wxEVT_STC_DWELLSTART,
+		(wxObjectEventFunction) (wxEventFunction) (wxStyledTextEventFunction)
+		&StyledTextCtrl::OnShowValue, NULL, this );
+	Connect( this->GetId(), -1, wxEVT_STC_DWELLEND,
+		(wxObjectEventFunction) (wxEventFunction) (wxStyledTextEventFunction)
+		&StyledTextCtrl::OnHideValue, NULL, this );
+	
 	SetReadOnly(true);
 }
 

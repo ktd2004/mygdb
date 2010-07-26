@@ -68,6 +68,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/colordlg.h>
 #include <wx/popupwin.h>
+#include <wx/strconv.h>
 
 // boost
 #include <boost/shared_ptr.hpp>

@@ -28,6 +28,7 @@ class wxString;
 #include <GridCtrl.h>
 #include <Memory.h>
 #include <About.h>
+#include <Encoding.h>
 
 //
 // MyGdb 메인 프레임

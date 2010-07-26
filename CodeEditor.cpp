@@ -150,6 +150,19 @@ void CodeEditor::UpdateTitle()
 void CodeEditor::Open(wxString path)
 {
 	m_stc->SetReadOnly(false);
+	Encoding *m_enc = new Encoding();
+	if ( m_enc->Detect(path, true) == false )
+	{
+	}
+	m_stc->AddText(m_enc->GetWxStr());
+	delete m_enc;
+	m_stc->SetReadOnly(true);
+}
+
+/*
+void CodeEditor::Open(wxString path)
+{
+	m_stc->SetReadOnly(false);
 
 	wxFile* file = new wxFile();
 
@@ -170,7 +183,8 @@ void CodeEditor::Open(wxString path)
 			return;
 		}
 
-		pBuf[fileSize] = 0;
+		pBuf[fileSize] = '\0';
+
 		m_stc->AddText(wxString(pBuf, wxConvUTF8));
 		free(pBuf);
 	}
@@ -181,6 +195,7 @@ void CodeEditor::Open(wxString path)
 
 	m_stc->SetReadOnly(true);
 }
+*/
 
 void CodeEditor::GotoLine(int line)
 {

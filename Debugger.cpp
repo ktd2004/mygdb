@@ -117,6 +117,7 @@ bool Debugger::Start()
 	m_pid = wxExecute(cmd, wxEXEC_ASYNC, m_process);
 
 	CONSOLE->SetReadOnly(false);
+    CONSOLE->EmptyUndoBuffer();
 	CONSOLE->Initial();
 
 	m_started = true;
@@ -354,6 +355,7 @@ void Debugger::Flush()
 	if ( m_process )
 	{
 		CONSOLE->SetReadOnly(false);
+		CONSOLE->EmptyUndoBuffer();
 
 		// ---------------- stderr
 		wxInputStream *err = m_process->GetErrorStream();
@@ -407,6 +409,7 @@ void Debugger::Flush()
 			if ( prompt )
 			{
 				CONSOLE->SetReadOnly(false);
+				CONSOLE->EmptyUndoBuffer();
 
 				DEBUG_TOOLBAR->EnableTool(ID_GO, true);
 				DEBUG_TOOLBAR->EnableTool(ID_STEP_INTO, true);
@@ -698,6 +701,7 @@ void Debugger::OnEndProcess(wxProcessEvent& event)
 	CONSOLE->DisconnectIdle();
 	
 	CONSOLE->SetReadOnly(false);
+    CONSOLE->EmptyUndoBuffer();
 
 	// build successful
 	if ( event.GetExitCode() == 0 ) 
@@ -777,9 +781,11 @@ void Debugger::OnTerminate(int pid, int status)
 	Flush();
 
 	CONSOLE->SetReadOnly(false);
-	CONSOLE->Puts(wxString::Format(wxT("Debugger terminated with exit code %d.\n"), 
+	CONSOLE->Puts(wxString::Format(
+		wxT("Debugger terminated with exit code %d.\n"), 
 		status), MYGDB_STDERR);
 	CONSOLE->LineEndDisplay();
+    CONSOLE->EmptyUndoBuffer();
 	CONSOLE->SetReadOnly(true);
 }
 

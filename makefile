@@ -41,7 +41,8 @@ SRC = 	treelistctrl.cpp \
 		Completion.cpp STCStyle.cpp InvokeApp.cpp \
 		StyledTextCtrl.cpp CodeEditor.cpp Watch.cpp \
 		Register.cpp CallStack.cpp Breakpoint.cpp \
-		GridCtrl.cpp Memory.cpp About.cpp
+		GridCtrl.cpp Memory.cpp About.cpp \
+		Encoding.cpp
 
 OBJECTS = $(SRC:.cpp=.o)
 
