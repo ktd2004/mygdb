@@ -92,6 +92,8 @@ private:
 
 	void OnAbout(wxCommandEvent& WXUNUSED(event));
 
+	// run
+	void OnRun(wxCommandEvent& WXUNUSED(event));
 	// next
 	void OnStepOver(wxCommandEvent& WXUNUSED(event));
 	// si

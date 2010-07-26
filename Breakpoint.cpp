@@ -379,11 +379,14 @@ void Breakpoint::OnRightClick(wxTreeEvent& event)
 	wxMenuItem *item;
 
 	item = new wxMenuItem(m_menu, ID_DELETE_BREAKPOINT, wxT("Delete"));
+	item->SetBitmap(GET_BITMAP("delete"));
 	m_menu->Append(item);
 	m_menu->AppendSeparator();
 	item = new wxMenuItem(m_menu, ID_ENABLE_BREAKPOINT, wxT("Enable"));
+	item->SetBitmap(GET_BITMAP("enable"));
 	m_menu->Append(item);
 	item = new wxMenuItem(m_menu, ID_DISABLE_BREAKPOINT, wxT("Disable"));
+	item->SetBitmap(GET_BITMAP("disable"));
 	m_menu->Append(item);
 
 	PopupMenu(m_menu);

@@ -245,6 +245,7 @@ bool Debugger::Write (wxString cmd)
 	if ( m_processing == true ) 
 		return false;
 
+	DEBUG_TOOLBAR->EnableTool(ID_RUN, false);
 	DEBUG_TOOLBAR->EnableTool(ID_GO, false);
 	DEBUG_TOOLBAR->EnableTool(ID_STEP_INTO, false);
 	DEBUG_TOOLBAR->EnableTool(ID_STEP_OUT, false);
@@ -253,6 +254,7 @@ bool Debugger::Write (wxString cmd)
 	DEBUG_TOOLBAR->EnableTool(ID_TOGGLE_BREAKPOINT, false);
 	DEBUG_TOOLBAR->Refresh(false);
 	
+	MENU_BAR->Enable(ID_RUN, false);
 	MENU_BAR->Enable(ID_GO, false);
 	MENU_BAR->Enable(ID_STEP_INTO, false);
 	MENU_BAR->Enable(ID_STEP_OUT, false);
@@ -411,6 +413,7 @@ void Debugger::Flush()
 				CONSOLE->SetReadOnly(false);
 				CONSOLE->EmptyUndoBuffer();
 
+				DEBUG_TOOLBAR->EnableTool(ID_RUN, true);
 				DEBUG_TOOLBAR->EnableTool(ID_GO, true);
 				DEBUG_TOOLBAR->EnableTool(ID_STEP_INTO, true);
 				DEBUG_TOOLBAR->EnableTool(ID_STEP_OUT, true);
@@ -419,6 +422,7 @@ void Debugger::Flush()
 				DEBUG_TOOLBAR->EnableTool(ID_TOGGLE_BREAKPOINT, true);
 				DEBUG_TOOLBAR->Refresh(false);
 				
+				MENU_BAR->Enable(ID_RUN, true);
 				MENU_BAR->Enable(ID_GO, true);
 				MENU_BAR->Enable(ID_STEP_INTO, true);
 				MENU_BAR->Enable(ID_STEP_OUT, true);
@@ -736,6 +740,7 @@ void Debugger::OnEndProcess(wxProcessEvent& event)
 	DEBUG_TOOLBAR->EnableTool(ID_START, true);
 	DEBUG_TOOLBAR->EnableTool(ID_ABORT, false);
 
+	DEBUG_TOOLBAR->EnableTool(ID_RUN, false);
 	DEBUG_TOOLBAR->EnableTool(ID_GO, false);
 	DEBUG_TOOLBAR->EnableTool(ID_STEP_INTO, false);
 	DEBUG_TOOLBAR->EnableTool(ID_STEP_OUT, false);
@@ -751,6 +756,7 @@ void Debugger::OnEndProcess(wxProcessEvent& event)
 	MENU_BAR->Enable(ID_START, true);
 	MENU_BAR->Enable(ID_ABORT, false);
 
+	MENU_BAR->Enable(ID_RUN, false);
 	MENU_BAR->Enable(ID_GO, false);
 	MENU_BAR->Enable(ID_STEP_INTO, false);
 	MENU_BAR->Enable(ID_STEP_OUT, false);

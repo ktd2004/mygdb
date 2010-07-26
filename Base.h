@@ -108,6 +108,7 @@ enum {
 
 	ID_ABORT,
 	ID_START,
+	ID_RUN,
 	ID_GO,
 	ID_STEP_INTO,
 	ID_STEP_OUT,

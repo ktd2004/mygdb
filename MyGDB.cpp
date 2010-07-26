@@ -56,6 +56,8 @@ BEGIN_EVENT_TABLE(MyGdbFrame, wxAuiMDIParentFrame)
     EVT_MENU(ID_ABORT, MyGdbFrame::OnAbort)
     EVT_MENU(ID_STOP, MyGdbFrame::OnStop)
     
+	// run
+	EVT_MENU(ID_RUN, MyGdbFrame::OnRun)
 	// next
 	EVT_MENU(ID_STEP_OVER, MyGdbFrame::OnStepOver)
 	// si
@@ -119,6 +121,7 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	menu->Append(item);
 	menu->AppendSeparator();
 	item = new wxMenuItem(menu, wxID_EXIT, wxT("E&xit\tCtrl+X"));
+	item->SetBitmap(GET_BITMAP("exit"));
 	menu->Append(item);
 	m_menuBar->Append(menu, wxT("&Invoke"));
 	
@@ -141,6 +144,11 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	item->SetBitmap(GET_BITMAP("abort"));
 	menu->Append(item);
 	// ------------
+	menu->AppendSeparator();
+	item = new wxMenuItem(menu, ID_RUN, 
+			wxT("Run\tF6"));
+	item->SetBitmap(GET_BITMAP("run"));
+	menu->Append(item);
 	menu->AppendSeparator();
 	// ------------
 	// Executes the next line of code but does not 
@@ -261,6 +269,11 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 			wxT("Abort (Shift+F5)"));
 
     m_debugToolBar->AddSeparator();
+	
+	m_debugToolBar->AddTool(ID_RUN, wxEmptyString, 
+			GET_BITMAP(wxT("run")), wxT("Run (F6)"));
+
+    m_debugToolBar->AddSeparator();
 
 	m_debugToolBar->AddTool(ID_STEP_OVER, wxEmptyString, 
 			GET_BITMAP(wxT("step_over")), wxT("Step Over (F10)"));
@@ -368,6 +381,7 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	m_debugToolBar->EnableTool(ID_START, true);
 	m_debugToolBar->EnableTool(ID_ABORT, false);
 
+	m_debugToolBar->EnableTool(ID_RUN, false);
 	m_debugToolBar->EnableTool(ID_GO, false);
 	m_debugToolBar->EnableTool(ID_STEP_INTO, false);
 	m_debugToolBar->EnableTool(ID_STEP_OUT, false);
@@ -380,6 +394,7 @@ MyGdbFrame::MyGdbFrame(wxWindow* parent,
 	m_menuBar->Enable(ID_START, true);
 	m_menuBar->Enable(ID_ABORT, false);
 
+	m_menuBar->Enable(ID_RUN, false);
 	m_menuBar->Enable(ID_GO, false);
 	m_menuBar->Enable(ID_STEP_INTO, false);
 	m_menuBar->Enable(ID_STEP_OUT, false);
@@ -488,6 +503,15 @@ void MyGdbFrame::OnStop(wxCommandEvent& WXUNUSED(event))
 {
 	if ( m_started )
 		m_debugger->Stop();
+}
+
+void MyGdbFrame::OnRun(wxCommandEvent& WXUNUSED(event))
+{
+	if ( m_started )
+	{
+		m_console->Puts(wxT("\n"));
+		m_debugger->Write(wxT("run"));
+	}
 }
 
 void MyGdbFrame::OnStepOver(wxCommandEvent& WXUNUSED(event))
@@ -652,7 +676,7 @@ void MyGdbFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	About *dlg = new About(this, this);
 	//dlg->SetAppName(wxTheApp->GetAppName());
 	dlg->SetAppName(wxT("MyGDB"));
-	dlg->SetVersion(wxT("dev-20100725"));
+	dlg->SetVersion(wxT("dev-20100726"));
 
 	wxString copy = wxT("MyGDB is distributed under the GNU GPL-v3\n\n");
 	copy = copy + wxT("inhak.min@gmail.com\n");
