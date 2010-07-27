@@ -676,7 +676,7 @@ void MyGdbFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	About *dlg = new About(this, this);
 	//dlg->SetAppName(wxTheApp->GetAppName());
 	dlg->SetAppName(wxT("MyGDB"));
-	dlg->SetVersion(wxT("dev-20100726"));
+	dlg->SetVersion(wxT("dev-20100727"));
 
 	wxString copy = wxT("MyGDB is distributed under the GNU GPL-v3\n\n");
 	copy = copy + wxT("inhak.min@gmail.com\n");

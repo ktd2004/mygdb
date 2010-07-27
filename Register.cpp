@@ -85,6 +85,7 @@ void Register::Print(wxString result, wxTreeItemId item)
 		SetItemText (child, 1, value1);
 		SetItemText (child, 2, value2);
 	}
+		
 
 	AutoResize();
 }
