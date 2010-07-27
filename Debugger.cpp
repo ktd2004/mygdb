@@ -706,6 +706,7 @@ void Debugger::OnEndProcess(wxProcessEvent& event)
 	
 	CONSOLE->SetReadOnly(false);
     CONSOLE->EmptyUndoBuffer();
+	CONSOLE->CmdKeyExecute(wxSTC_CMD_DOCUMENTEND);
 
 	// build successful
 	if ( event.GetExitCode() == 0 ) 
@@ -787,6 +788,7 @@ void Debugger::OnTerminate(int pid, int status)
 	Flush();
 
 	CONSOLE->SetReadOnly(false);
+	CONSOLE->CmdKeyExecute(wxSTC_CMD_DOCUMENTEND);
 	CONSOLE->Puts(wxString::Format(
 		wxT("Debugger terminated with exit code %d.\n"), 
 		status), MYGDB_STDERR);
@@ -863,6 +865,7 @@ void Debugger::Stop()
 	kill(m_pid, SIGINT);
 #endif
 
+	CONSOLE->CmdKeyExecute(wxSTC_CMD_DOCUMENTEND);
 	CONSOLE->Puts(wxT("\n"));
 
 	CONSOLE->ConnectIdle();

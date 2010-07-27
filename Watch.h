@@ -37,12 +37,19 @@ private:
 	wxTreeItemId rootItem;
 	MyGdbFrame *myFrame;
 
+	long m_parsePos;
+
 	wxArrayString nodeExpandedArray;
 	
 public:
 	void Build();
 	void Clear();
 	void PrintVariable(wxString result, wxTreeItemId item);
+	int FindCommaPos(const wxString& str);
+	int FindCharOutsideQuotes(const wxString& str, wxChar ch);
+	void ParseEntry (wxTreeItemId parent, wxString &text);
+	wxString GetValue(wxString text);
+	wxString GetVariable(wxString text);
 
 	void LoadState ();
 	void SaveState ();
