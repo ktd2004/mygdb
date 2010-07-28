@@ -8,7 +8,12 @@ Config::Config()
 { 
 	sXml = wxT("");
 
-	fileName = exePath + wxT("/mygdb.cfg");
+	//fileName = exePath + wxT("/mygdb.cfg");
+#ifdef __MINGW32__
+	fileName = wxFileName::GetHomeDir() + wxT("/mygdb.cfg");
+#else
+	fileName = wxFileName::GetHomeDir() + wxT("/.mygdb.cfg");
+#endif
 
 	if ( wxFileName::FileExists(fileName) )
 	{
