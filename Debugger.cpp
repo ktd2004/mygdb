@@ -113,8 +113,8 @@ bool Debugger::Start()
 
 	wxString cmd = gdb + wxT(" ");
 	cmd = cmd + wxT("--command=") + cmdPath + wxT(" ");
-	// for test
-	//cmd = cmd + wxT("--args aaaaaaaaaa ");
+	// for the test
+	// cmd = cmd + wxT("--args aaaaaaaaaa ");
 	cmd = cmd + executableFile;
 
 	m_process = new wxProcess(this);
@@ -572,6 +572,15 @@ wxString Debugger::RemoveAnnotate(wxString msg)
 	bool add = false;
 
 	wxString result = wxEmptyString;
+	
+	// annotate 메세지가 없다면 원래의 메세지를 리턴
+	wxString annotate1 = wxString::Format(wxT("\r\n%c%c"), 26, 26);
+	if ( msg.Find(annotate1) == wxNOT_FOUND )
+	{
+		wxString annotate2 = wxString::Format(wxT("\n%c%c"), 26, 26);
+		if ( msg.Find(annotate2) == wxNOT_FOUND )
+			return msg;
+	}
 
 	for(unsigned int i=0; i<msg.Length(); i++)
 	{
@@ -629,7 +638,7 @@ wxString Debugger::RemoveAnnotate(wxString msg)
 		}
 		else
 		{
-			if (add || annotating == false) 
+			if (add) 
 				result = result + msg[i];
 		}
 	}
