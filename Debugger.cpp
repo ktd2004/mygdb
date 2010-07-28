@@ -25,6 +25,12 @@ wxString Debugger::CreateInitFile ()
 	wxString path = wxFileName::CreateTempFileName(wxT("mygdb"));
 	if ( file->Open(path, wxFile::write) ) 
 	{
+		wxString args = 
+			CONFIG->GetProperty(wxT("INVOKE/ARGS"), wxT("value"));
+
+		if ( args.Length() > 0 )
+			file->Write(wxT("set args ") + args + wxT("\n"));
+
 		file->Write(wxT("set annotate 2\n"));
 
 		wxString breakpoints = 
@@ -81,8 +87,6 @@ bool Debugger::Start()
 		CONFIG->GetProperty(wxT("INVOKE/EXECUTABLELOCATION"), wxT("value"));
 	wxString sourceLocation = 
 		CONFIG->GetProperty(wxT("INVOKE/SOURCELOCATION"), wxT("value"));
-	wxString args = 
-		CONFIG->GetProperty(wxT("INVOKE/ARGS"), wxT("value"));
 
 	if ( wxFileName::FileExists(executableFile) == false )
 	{
@@ -105,10 +109,12 @@ bool Debugger::Start()
 		return false;
 	}
 	
-	wxString path = CreateInitFile ();
+	wxString cmdPath = CreateInitFile ();
 
 	wxString cmd = gdb + wxT(" ");
-	cmd = cmd + wxT("--command=") + path + wxT(" ");
+	cmd = cmd + wxT("--command=") + cmdPath + wxT(" ");
+	// for test
+	//cmd = cmd + wxT("--args aaaaaaaaaa ");
 	cmd = cmd + executableFile;
 
 	m_process = new wxProcess(this);
@@ -140,10 +146,10 @@ bool Debugger::Start()
 	MENU_BAR->Enable(ID_ABORT, true);
 	MENU_BAR->Enable(ID_STOP, true);
 
-	CONSOLE->ConnectIdle();
-
 	m_timer = new wxTimer(this, wxID_ANY);
 	m_timer->Start(100);
+	
+	CONSOLE->ConnectIdle();
 
 	return true;
 }
@@ -623,7 +629,7 @@ wxString Debugger::RemoveAnnotate(wxString msg)
 		}
 		else
 		{
-			if (add) 
+			if (add || annotating == false) 
 				result = result + msg[i];
 		}
 	}
@@ -711,12 +717,14 @@ void Debugger::OnEndProcess(wxProcessEvent& event)
 	// build successful
 	if ( event.GetExitCode() == 0 ) 
 	{
-		CONSOLE->Puts(wxString::Format(wxT("Debugger exited with exit code %d.\n"), 
+		CONSOLE->Puts(wxString::Format(
+					wxT("Debugger exited with exit code %d.\n"), 
 			event.GetExitCode()), MYGDB_STDOUT);
 	}
 	else
 	{
-		CONSOLE->Puts(wxString::Format(wxT("\nDebugger aborted with exit code %d.\n"), 
+		CONSOLE->Puts(wxString::Format(
+					wxT("\nDebugger aborted with exit code %d.\n"), 
 			event.GetExitCode()), MYGDB_STDERR);
 	}
 	

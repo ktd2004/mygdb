@@ -464,7 +464,7 @@ void MyGdbFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 	if ( value.Length() <= 0 )
 	{
 		wxMessageDialog(this, 
-			wxT("No specified 'GDB Location'\nInvoke -> Invoke Application"), 
+			wxT("No 'GDB Location' specified.\nInvoke -> Invoke Application"), 
 			wxT("MyGDB"), wxOK|wxICON_WARNING).ShowModal();
 		return;
 	}
@@ -473,7 +473,7 @@ void MyGdbFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 	if ( value.Length() <= 0 )
 	{
 		wxMessageDialog(this, 
-			wxT("No specified 'Executable File'\nInvoke -> Invoke Application"), 
+			wxT("No 'Executable File' specified.\nInvoke -> Invoke Application"), 
 			wxT("MyGDB"), wxOK|wxICON_WARNING).ShowModal();
 		return;
 	}
@@ -482,7 +482,7 @@ void MyGdbFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 	if ( value.Length() <= 0 )
 	{
 		wxMessageDialog(this, 
-			wxT("No specified 'Source Location'\nInvoke -> Invoke Application"), 
+			wxT("No 'Source Location' specified.\nInvoke -> Invoke Application"), 
 			wxT("MyGDB"), wxOK|wxICON_WARNING).ShowModal();
 		return;
 	}
