@@ -28,7 +28,9 @@ public:
 
 	wxString Parse(wxString msg);
 	wxString RemoveAnnotate(wxString msg);
-	void UpdateWhere (wxString annotate);
+	bool GetWhereByFrame (wxString msg, wxString *address);
+	bool GetWhereBySource (wxString msg, wxString *source, long *line, wxString *address);
+	void UpdatePointer(wxString source, long line);
 
 	void Log(wxString msg);
 	bool FindPrompt(wxString msg);

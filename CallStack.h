@@ -31,6 +31,7 @@ public:
 	void Build();
 	void Clear();
 	void Print(wxString msg, wxTreeItemId item);
+	void UpdatePointer(wxString address);
 
 	void LoadState ();
 	void SaveState ();

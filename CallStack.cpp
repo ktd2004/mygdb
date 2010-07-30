@@ -24,6 +24,7 @@ CallStack::CallStack(wxWindow* parent,
 	
 	m_imgList = new wxImageList (16, 16, true);
 	m_imgList->Add(GET_BITMAP("stack"));
+	m_imgList->Add(GET_BITMAP("pointer"));
 	SetImageList(m_imgList);
 	
 	rootItem = AddRoot (wxT("CallStack"));
@@ -117,6 +118,36 @@ void CallStack::Print(wxString msg, wxTreeItemId item)
 	}
 
 	AutoResize();
+}
+
+void CallStack::UpdatePointer(wxString address)
+{
+	wxTreeItemId id = rootItem;
+	wxTreeItemIdValue cookie;
+	wxTreeItemId child = GetFirstChild(id, cookie);
+
+	while(child.IsOk())
+	{
+		wxString text = GetItemText(child, 1);
+		text.Trim(true);
+		text.Trim(false);
+
+		address.Trim(true);
+		address.Trim(false);
+
+		long addr1, addr2;
+		text.ToLong(&addr1, 16);
+		address.ToLong(&addr2, 16);
+
+		if (addr1 == addr2)
+		{
+			SetItemImage(child, 0, 1);
+			ScrollTo(child);
+			break;
+		}
+
+		child = GetNextChild(id, cookie);
+	}
 }
 
 void CallStack::SaveTreeNodeState(wxTreeItemId id, wxString path)

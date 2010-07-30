@@ -436,16 +436,33 @@ void Debugger::Flush()
 				MENU_BAR->Enable(ID_RUN_TO_CURSOR, true);
 				MENU_BAR->Enable(ID_TOGGLE_BREAKPOINT, true);
 
-				// changed frame
-				wxString invalid = 
-					wxString::Format(wxT("%c%cframes-invalid"), 26, 26);
+				bool changed = false;	
 
-				if ( buffer.Find(invalid) != wxNOT_FOUND )
+				wxString source = wxEmptyString;
+				wxString address = wxEmptyString;
+				long line = -1;
+
+				wxString tag = wxString::Format(wxT("%c%csource"), 26, 26);
+				if ( buffer.Find(tag) != wxNOT_FOUND )
 				{
-					// where
-					wxString annotate = Eval(wxT("frame 0"));
-					UpdateWhere (annotate);
+					if ( GetWhereBySource (buffer, &source, &line, &address) == true )
+					{
+						UpdatePointer(source, line);
+						changed = true;
+					}
+				}
 
+				tag = wxString::Format(wxT("%c%cframe-begin"), 26, 26);
+				if ( changed == false && buffer.Find(tag) != wxNOT_FOUND )
+				{
+					if ( GetWhereByFrame (buffer, &address) == true )
+					{
+						changed = true;
+					}
+				}
+
+				if ( changed == true )
+				{
 					myFrame->Freeze();
 
 					if ( M_MGR.GetPane(wxT("watch")).IsShown() == true )
@@ -454,7 +471,13 @@ void Debugger::Flush()
 						REGISTER->Build();
 
 					if ( M_MGR.GetPane(wxT("callstack")).IsShown() == true )
+					{
 						CALLSTACK->Build();
+						if ( address.Length() > 0 )
+						{
+							CALLSTACK->UpdatePointer(address);
+						}
+					}
 					
 					if ( M_MGR.GetPane(wxT("memory")).IsShown() == true )
 						MEMORY->Build();
@@ -646,47 +669,95 @@ wxString Debugger::RemoveAnnotate(wxString msg)
 	return result;
 }
 
-void Debugger::UpdateWhere (wxString msg)
+bool Debugger::GetWhereByFrame (wxString msg, wxString *address)
 {
 	// check error 
 	wxString error = wxString::Format(wxT("%c%cerror"), 26, 26);
-	if ( msg.Find(error) != wxNOT_FOUND ) return;
+	if ( msg.Find(error) != wxNOT_FOUND ) 
+		return false;
 			
-	wxString sourceFile;
-	wxString sourceLine;
-	
+	// -------------
+	wxString parse = Parse(msg);
+	//wxMessageBox(parse);
+
+	wxStringTokenizer tkz(parse, wxString::Format(wxT("%c%c"), 26, 26));
+	while ( tkz.HasMoreTokens() ) 
+	{
+		wxString token = tkz.GetNextToken();
+
+		wxString tag = wxT("frame-address ");
+		if ( token.StartsWith(tag) )
+		{
+			wxString frameAddress;
+			frameAddress = token.SubString(tag.Length(), token.Length()); 
+			frameAddress.Trim(true);
+			frameAddress.Trim(false);
+
+			*address = frameAddress;
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool Debugger::GetWhereBySource (wxString msg, 
+		wxString *source, long *line, wxString *address)
+{
+	// check error 
+	wxString error = wxString::Format(wxT("%c%cerror"), 26, 26);
+	if ( msg.Find(error) != wxNOT_FOUND ) 
+		return false;
+
+
 	// -------------
 	wxString parse = Parse(msg);
 	wxStringTokenizer tkz(parse, wxString::Format(wxT("%c%c"), 26, 26));
 	while ( tkz.HasMoreTokens() ) 
 	{
 		wxString token = tkz.GetNextToken();
+		wxString tag = wxT("source ");
+		if ( token.StartsWith(tag) )
+		{
+			wxString info = token.SubString(tag.Length(), token.Length()); 
 
-		wxString tag = wxT("frame-source-file ");
-		if ( token.StartsWith(tag) )
-		{
-			sourceFile = token.SubString(tag.Length(), token.Length()); 
-			sourceFile.Trim(true);
-			sourceFile.Trim(false);
-		}
-		
-		tag = wxT("frame-source-line ");
-		if ( token.StartsWith(tag) )
-		{
-			sourceLine = token.SubString(tag.Length(), token.Length()); 
-			sourceLine.Trim(true);
-			sourceLine.Trim(false);
+			wxStringTokenizer tkz2(info, wxT(":"));
+			wxString sourcePath;
+
+#ifdef __MINGW32__
+			wxString sourceDrive = tkz2.GetNextToken();
+			wxString sourceFile = tkz2.GetNextToken();
+			sourcePath = sourceDrive + wxT(":") + sourceFile;
+#else
+			sourcePath = tkz2.GetNextToken();
+#endif
+			*source = sourcePath;
+			
+			wxString sourceLine;
+			sourceLine = tkz2.GetNextToken();
+			sourceLine.ToLong(line);
+			
+			tkz2.GetNextToken();
+			tkz2.GetNextToken();
+			
+			*address = tkz2.GetNextToken();
+
+			break;
 		}
 	}
 
-	if ( sourceFile.Length() <= 0 || sourceLine.Length() <= 0 ) return;
+	return true;
+}
 
+void Debugger::UpdatePointer(wxString source, long line)
+{
+	//if ( sourceFile.Length() <= 0 || sourceLine.Length() <= 0 ) return;
 	// ---------
 	wxString sourceLocation = 
 		CONFIG->GetProperty(wxT("INVOKE/SOURCELOCATION"), wxT("value"));
 	if ( sourceLocation.Length() <= 0 ) return;
 
-	wxFileName path(sourceFile);
+	wxFileName path(source);
 	path.MakeAbsolute(sourceLocation);
 
 	CodeEditor *editor = myFrame->OpenSource(path.GetFullPath());
@@ -702,8 +773,8 @@ void Debugger::UpdateWhere (wxString msg)
 		editors[i]->GetSTC()->MarkerDeleteAll(DEBUG_MARKER);
 
 	// -------- goto line
-	long line;
-	sourceLine.ToLong(&line);
+	//long line;
+	//sourceLine.ToLong(&line);
 	editor->GotoLineWithDebugMarker(line-1);
 
 	// -------- console refocus
