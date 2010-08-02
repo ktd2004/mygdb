@@ -58,8 +58,10 @@ void CallStack::Build()
 	// check error 
 	if ( msg.Find(error) != wxNOT_FOUND ) return;
 
+	Freeze();
 	Print(msg, rootItem);
-	
+	Thaw();
+
 	LoadState();
 }
 

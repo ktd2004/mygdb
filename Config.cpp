@@ -17,58 +17,77 @@ Config::Config()
 
 	if ( wxFileName::FileExists(fileName) )
 	{
-		Open();
+		wxString msg = wxT("Session already exist in the system.\ndo you want to load it?");
+		int ret = wxMessageBox(msg, wxT("MyGDB"), 
+				wxYES_NO|wxCANCEL|wxICON_QUESTION);
+		if ( ret == wxYES ) 
+		{
+			Open();
+		}
+		else if ( ret == wxCANCEL ) 
+		{
+			exit(0);
+		}
+		else
+		{
+			New();
+			Save();
+		}
 	}
 	else
 	{
-		xml = new wxXmlDocument();
-		//xml->SetEncoding(wxT("UTF-8"));
-		xml->SetVersion(wxT("1.0"));
-
-		root = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("MYGDB"));
-		xml->SetRoot(root);
-
-		// version
-		SetProperty(wxT("VERSION"), wxT("value"), wxT("1.0"));
-
-		// creation
-		wxDateTime time = wxDateTime::Now();
-		SetProperty(wxT("CREATION"), wxT("value"), 
-				time.Format(wxT("%c"), wxDateTime::CET).c_str());
-		SetProperty(wxT("NAME"), wxT("value"), wxT("MyGDB Configuration"));
-		
-		// invoke application
-		SetProperty(wxT("INVOKE/EXECUTABLELOCATION"), wxT("value"), wxT(""));
-		SetProperty(wxT("INVOKE/SOURCELOCATION"), wxT("value"), wxT(""));
-		SetProperty(wxT("INVOKE/GDBLOCATION"), wxT("value"), wxT(""));
-		SetProperty(wxT("INVOKE/ARGS"), wxT("value"), wxT(""));
-		
-		SetProperty(wxT("DEBUG/BREAKPOINT"), wxT("value"), wxT(""));
-
-		// editor general
-		SetProperty(wxT("EDITOR/GENERAL/USETABCHAR"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/TABINDENTS"), wxT("value"), wxT("false"));
-		SetProperty(wxT("EDITOR/GENERAL/TABSIZE"), wxT("value"), wxT("4"));
-		SetProperty(wxT("EDITOR/GENERAL/AUTOINDENT"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/SMARTINDENT"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/INDENTGUIDES"), wxT("value"), wxT("true"));
-		// 0: file name only, 1: relative file name, 2: full path
-		SetProperty(wxT("EDITOR/GENERAL/TITLE"), wxT("value"), wxT("0"));
-		SetProperty(wxT("EDITOR/GENERAL/WORDWRAP"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/LINENUMBER"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/LINECARET"), wxT("value"), wxT("true"));
-		//SetProperty("EDITOR/GENERAL/SHOWHELP"), wxT("value"), wxT("false"));
-		SetProperty(wxT("EDITOR/GENERAL/SHOWVALUE"), wxT("value"), wxT("true"));
-		SetProperty(wxT("EDITOR/GENERAL/SHOWEDGE"), wxT("value"), wxT("false"));
-		SetProperty(wxT("EDITOR/GENERAL/EDGECOLUMN"), wxT("value"), wxT("80"));
-		SetProperty(wxT("EDITOR/GENERAL/RULER"), wxT("value"), wxT("false"));
-		SetProperty(wxT("EDITOR/GENERAL/CODEEXPLORERUPDATETIME"), wxT("value"), wxT("2000"));
-
+		New();
 		Save();
 	}
 }
 
 Config::~Config() { }
+
+void Config::New (void)
+{
+	xml = new wxXmlDocument();
+	//xml->SetEncoding(wxT("UTF-8"));
+	xml->SetVersion(wxT("1.0"));
+
+	root = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("MYGDB"));
+	xml->SetRoot(root);
+
+	// version
+	SetProperty(wxT("VERSION"), wxT("value"), wxT("1.0"));
+
+	// creation
+	wxDateTime time = wxDateTime::Now();
+	SetProperty(wxT("CREATION"), wxT("value"), 
+			time.Format(wxT("%c"), wxDateTime::CET).c_str());
+	SetProperty(wxT("NAME"), wxT("value"), wxT("MyGDB Configuration"));
+	
+	// invoke application
+	SetProperty(wxT("INVOKE/EXECUTABLELOCATION"), wxT("value"), wxT(""));
+	SetProperty(wxT("INVOKE/SOURCELOCATION"), wxT("value"), wxT(""));
+	SetProperty(wxT("INVOKE/GDBLOCATION"), wxT("value"), wxT(""));
+	SetProperty(wxT("INVOKE/ARGS"), wxT("value"), wxT(""));
+	
+	SetProperty(wxT("DEBUG/BREAKPOINT"), wxT("value"), wxT(""));
+
+	// editor general
+	SetProperty(wxT("EDITOR/GENERAL/USETABCHAR"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/TABINDENTS"), wxT("value"), wxT("false"));
+	SetProperty(wxT("EDITOR/GENERAL/TABSIZE"), wxT("value"), wxT("4"));
+	SetProperty(wxT("EDITOR/GENERAL/AUTOINDENT"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/SMARTINDENT"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/INDENTGUIDES"), wxT("value"), wxT("true"));
+	// 0: file name only, 1: relative file name, 2: full path
+	SetProperty(wxT("EDITOR/GENERAL/TITLE"), wxT("value"), wxT("0"));
+	SetProperty(wxT("EDITOR/GENERAL/WORDWRAP"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/LINENUMBER"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/LINECARET"), wxT("value"), wxT("true"));
+	//SetProperty("EDITOR/GENERAL/SHOWHELP"), wxT("value"), wxT("false"));
+	SetProperty(wxT("EDITOR/GENERAL/SHOWVALUE"), wxT("value"), wxT("true"));
+	SetProperty(wxT("EDITOR/GENERAL/SHOWEDGE"), wxT("value"), wxT("false"));
+	SetProperty(wxT("EDITOR/GENERAL/EDGECOLUMN"), wxT("value"), wxT("80"));
+	SetProperty(wxT("EDITOR/GENERAL/RULER"), wxT("value"), wxT("false"));
+	SetProperty(wxT("EDITOR/GENERAL/CODEEXPLORERUPDATETIME"), wxT("value"), wxT("2000"));
+}
 
 void Config::Save (void)
 {

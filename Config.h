@@ -20,6 +20,7 @@ public:
 
 	bool Open(void);
 	void Save (void);
+	void New (void);
 	wxString Read(wxString fileName);
 	bool Changed(void);
 	void Backup(void);
