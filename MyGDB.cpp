@@ -528,7 +528,7 @@ void MyGdbFrame::OnStepInto(wxCommandEvent& WXUNUSED(event))
 	if ( m_started )
 	{
 		m_console->Puts(wxT("\n"));
-		m_debugger->Write(wxT("si"));
+		m_debugger->Write(wxT("step"));
 	}
 }
 
@@ -676,7 +676,7 @@ void MyGdbFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	About *dlg = new About(this, this);
 	//dlg->SetAppName(wxTheApp->GetAppName());
 	dlg->SetAppName(wxT("MyGDB"));
-	dlg->SetVersion(wxT("dev-20100730"));
+	dlg->SetVersion(wxT("dev-20100802"));
 
 	wxString copy = wxT("MyGDB is distributed under the GNU GPL-v3\n\n");
 	copy = copy + wxT("inhak.min@gmail.com\n");

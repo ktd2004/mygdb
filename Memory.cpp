@@ -379,18 +379,18 @@ MemoryRange::~MemoryRange ()
 void MemoryRange::OnOk(wxCommandEvent& WXUNUSED(event))
 {
 	wxString value = m_startTextCtrl->GetValue();
-	long start;
-	if ( value.ToLong(&start, 16) == false ) return;
+	unsigned long start;
+	if ( value.ToULong(&start, 16) == false ) return;
 	myParent->m_start = start;
 	
 	value = m_countTextCtrl->GetValue();
-	long count;
-	if ( value.ToLong(&count, 10) == false ) return;
+	unsigned long count;
+	if ( value.ToULong(&count, 10) == false ) return;
 	myParent->m_count = count;
 	
 	value = m_columnTextCtrl->GetValue();
-	long column;
-	if ( value.ToLong(&column, 10) == false ) return;
+	unsigned long column;
+	if ( value.ToULong(&column, 10) == false ) return;
 	myParent->m_column = column;
 
 	myParent->Build();

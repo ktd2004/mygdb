@@ -28,7 +28,7 @@ public:
 
 	wxString Parse(wxString msg);
 	wxString RemoveAnnotate(wxString msg);
-	bool GetWhereByFrame (wxString msg, wxString *address);
+	bool GetWhereByFrame (wxString msg, wxString *source, long *line, wxString *address);
 	bool GetWhereBySource (wxString msg, wxString *source, long *line, wxString *address);
 	void UpdatePointer(wxString source, long line);
 

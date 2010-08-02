@@ -441,8 +441,10 @@ void Debugger::Flush()
 				wxString source = wxEmptyString;
 				wxString address = wxEmptyString;
 				long line = -1;
+				
+				wxString tag;
 
-				wxString tag = wxString::Format(wxT("%c%csource"), 26, 26);
+				tag = wxString::Format(wxT("%c%csource"), 26, 26);
 				if ( buffer.Find(tag) != wxNOT_FOUND )
 				{
 					if ( GetWhereBySource (buffer, &source, &line, &address) == true )
@@ -455,8 +457,11 @@ void Debugger::Flush()
 				tag = wxString::Format(wxT("%c%cframe-begin"), 26, 26);
 				if ( changed == false && buffer.Find(tag) != wxNOT_FOUND )
 				{
-					if ( GetWhereByFrame (buffer, &address) == true )
+					if ( GetWhereByFrame (buffer, &source, &line, &address) == true )
 					{
+						if ( source.Length() > 0 && line != -1 )
+							UpdatePointer(source, line);
+
 						changed = true;
 					}
 				}
@@ -669,7 +674,8 @@ wxString Debugger::RemoveAnnotate(wxString msg)
 	return result;
 }
 
-bool Debugger::GetWhereByFrame (wxString msg, wxString *address)
+bool Debugger::GetWhereByFrame (wxString msg, 
+		wxString *source, long *line, wxString *address)
 {
 	// check error 
 	wxString error = wxString::Format(wxT("%c%cerror"), 26, 26);
@@ -684,8 +690,28 @@ bool Debugger::GetWhereByFrame (wxString msg, wxString *address)
 	while ( tkz.HasMoreTokens() ) 
 	{
 		wxString token = tkz.GetNextToken();
+		
+		wxString tag = wxT("frame-source-file ");
+		if ( token.StartsWith(tag) )
+		{
+			wxString frameSource;
+			frameSource = token.SubString(tag.Length(), token.Length()); 
+			frameSource.Trim(true);
+			frameSource.Trim(false);
+			*source = frameSource;
+		}
+		
+		tag = wxT("frame-source-line ");
+		if ( token.StartsWith(tag) )
+		{
+			wxString frameLine;
+			frameLine = token.SubString(tag.Length(), token.Length()); 
+			frameLine.Trim(true);
+			frameLine.Trim(false);
+			frameLine.ToLong(line);
+		}
 
-		wxString tag = wxT("frame-address ");
+		tag = wxT("frame-address ");
 		if ( token.StartsWith(tag) )
 		{
 			wxString frameAddress;
@@ -694,6 +720,11 @@ bool Debugger::GetWhereByFrame (wxString msg, wxString *address)
 			frameAddress.Trim(false);
 
 			*address = frameAddress;
+		}
+
+		tag = wxT("frame-end");
+		if ( token.StartsWith(tag) )
+		{
 			break;
 		}
 	}
@@ -724,13 +755,19 @@ bool Debugger::GetWhereBySource (wxString msg,
 			wxStringTokenizer tkz2(info, wxT(":"));
 			wxString sourcePath;
 
-#ifdef __MINGW32__
-			wxString sourceDrive = tkz2.GetNextToken();
-			wxString sourceFile = tkz2.GetNextToken();
-			sourcePath = sourceDrive + wxT(":") + sourceFile;
-#else
-			sourcePath = tkz2.GetNextToken();
-#endif
+			// windows style path (c:/...)
+			if (info[1] == wxChar(':'))
+			{
+				wxString sourceDrive = tkz2.GetNextToken();
+				wxString sourceFile = tkz2.GetNextToken();
+				sourcePath = sourceDrive + wxT(":") + sourceFile;
+			}
+			// unix style path
+			else
+			{
+				sourcePath = tkz2.GetNextToken();
+			}
+
 			*source = sourcePath;
 			
 			wxString sourceLine;

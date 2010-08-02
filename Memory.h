@@ -29,8 +29,8 @@ public:
 	MyGdbFrame *myFrame;
 	
 	int m_column;
-	unsigned int m_start;
-	unsigned int m_count;
+	unsigned long m_start;
+	unsigned long m_count;
 
 private:
 	wxMenu *m_menu;
