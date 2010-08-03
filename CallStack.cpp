@@ -265,7 +265,7 @@ void CallStack::OnLeftDClick(wxMouseEvent& event)
 
 	wxFileName path(sourceFile);
 	path.MakeAbsolute(sourceLocation);
-	
+
 	CodeEditor *editor = myFrame->OpenSource(path.GetFullPath());
 
 	// goto line

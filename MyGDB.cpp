@@ -619,6 +619,15 @@ void MyGdbFrame::OnRunToCursor(wxCommandEvent& WXUNUSED(event))
 
 CodeEditor *MyGdbFrame::OpenSource(wxString path)
 {
+	// 드라이브 문자는 무조건 소문자로 만든다.
+	// C: c: 가 나오는 경우가 있기 때문이다.
+	if ( path[1] == wxChar(':') )
+	{
+		wxString drive = path[0];
+		drive = drive.Lower();
+		path = drive + wxT(":") + path.SubString(2, path.Length());
+	}
+
 	path.Replace(wxT("\\"), wxT("/"), true);
 
 	std::vector<CodeEditor*> editors;
