@@ -1,4 +1,7 @@
 // vim: set fdm=marker ts=4 sw=4:
+/* 
+ * $Log$
+ */
 
 #ifndef _WATCH_H_
 #define _WATCH_H_
